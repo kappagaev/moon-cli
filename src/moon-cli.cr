@@ -43,7 +43,7 @@ end
 OptionParser.parse do |parser|
   default_options parser
 
-  parser.on "auth", "Auth command" do
+  parser.on "login", "Login command -e=EMAIL -p=PASSWORD" do
     auth = Auth.new
     auth.execute
     exit
