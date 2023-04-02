@@ -43,8 +43,8 @@ end
 macro with_commands(parser, *commands)
   {% for cmd, i in commands %}
     parser.on {{ cmd }}.command, {{ cmd }}.description do
-      auth = {{ cmd }}.new
-      auth.execute
+      cmd = {{ cmd }}.new
+      cmd.execute
       exit
     end
   {% end %}
