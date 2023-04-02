@@ -4,6 +4,12 @@ version: 0.1.0
 authors:
   - kkpagaev <kkpagaev@gmail.com>
 
+dependencies:
+  crest:
+    github: mamantoha/crest
+  moon-markdown:
+    github: kappagaev/moon-markdown
+
 targets:
   moon-cli:
     main: src/moon-cli.cr
