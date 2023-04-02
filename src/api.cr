@@ -15,7 +15,6 @@ class MoonApi
 
     raise LoginError.new("Unknown error") unless hash.has_key?("token")
 
-    puts "Authentication successful"
     token = hash["token"]
     return token
   end

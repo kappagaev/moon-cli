@@ -29,6 +29,8 @@ class Auth < Command::Base
     puts "Authenticating..."
     begin
       token = MoonApi.login! email, password
+      puts "Authentication successful"
+      token
     rescue e
       puts "Error: #{e.message}"
       exit(1)

@@ -1,5 +1,5 @@
 class Calendar < Command::Base
-  @@command = "calender"
+  @@command = "calendar"
   @@description = "Authenticate with Polaris"
 
   def execute
