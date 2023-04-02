@@ -39,15 +39,19 @@ def default_options(parser)
   end
 end
 
+macro with_commands(parser, *commands)
+  {% for cmd, i in commands %}
+    parser.on {{ cmd }}.command, {{ cmd }}.description do
+      auth = {{ cmd }}.new
+      auth.execute
+      exit
+    end
+  {% end %}
+end
 
 OptionParser.parse do |parser|
   default_options parser
-
-  parser.on "login", "Login command -e=EMAIL -p=PASSWORD" do
-    auth = Auth.new
-    auth.execute
-    exit
-  end
+  with_commands parser, Auth, Calendar
 end
 
 def parse(body : String, date : String)
@@ -62,4 +66,3 @@ end
 # body = File.read("calendar/" + file)
 # puts parse(body, date).inspect
 # end
-

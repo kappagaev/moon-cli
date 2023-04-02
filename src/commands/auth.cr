@@ -1,8 +1,13 @@
 class Auth < Command::Base
+  @@command = "login"
+  @@description = "Authenticate with Polaris"
+
   property email : String = ""
   property password : String = ""
+
   def execute
-    get_token
+    token = get_token
+    save_token token
   end
 
   private def get_token
@@ -36,7 +41,7 @@ class Auth < Command::Base
     elsif hash.has_key?("token")
       puts "Authentication successful"
       token = hash["token"]
-      save_token token
+      return token
     else
       puts "Unknown error"
       exit(1)
