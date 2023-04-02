@@ -29,21 +29,10 @@ class Auth < Command::Base
     end
 
     puts "Authenticating..."
-    res = Crest.post(
-      "http://127.0.0.1:3000/api/signin",
-      {:email => email, :password => password}
-    )
-    hash = Hash(String, String).from_json(res.body)
-    if hash.has_key?("error")
-      puts "Authentication failed"
-      puts "Error: #{hash["error"]}"
-      exit(1)
-    elsif hash.has_key?("token")
-      puts "Authentication successful"
-      token = hash["token"]
-      return token
-    else
-      puts "Unknown error"
+    begin
+      token = MoonApi.login! email, password
+    rescue e
+      puts "Error: #{e.message}"
       exit(1)
     end
   end

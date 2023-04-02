@@ -1,3 +1,4 @@
+require "./api"
 require "./command"
 require "./commands/*"
 
