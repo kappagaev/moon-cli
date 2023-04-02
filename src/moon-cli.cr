@@ -3,43 +3,10 @@ require "./api"
 require "./command"
 require "./commands/*"
 
-require "option_parser"
+require "./option_parser"
 require "moon-markdown"
 require "crest"
 require "json"
-
-class Params
-  property date : Time = Time.utc
-end
-
-params = Params.new
-
-def default_options(parser)
-  parser.on "-v", "--version", "Show version" do
-    puts "version 0.1"
-    exit
-  end
-
-  parser.banner = "Usage: polaris [subcommand] [options]"
-
-  parser.on "-h", "--help", "Show help" do
-    puts parser
-    exit
-  end
-
-  parser.missing_option do |option_flag|
-    STDERR.puts "ERROR: #{option_flag} is missing something."
-    STDERR.puts ""
-    STDERR.puts parser
-    exit(1)
-  end
-
-  parser.invalid_option do |option_flag|
-    STDERR.puts "ERROR: #{option_flag} is not a valid option."
-    STDERR.puts parser
-    exit(1)
-  end
-end
 
 macro with_commands(parser, *commands)
   {% for cmd, i in commands %}
@@ -52,7 +19,6 @@ macro with_commands(parser, *commands)
 end
 
 OptionParser.parse do |parser|
-  default_options parser
   with_commands parser, Auth, Calendar
 end
 

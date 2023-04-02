@@ -12,8 +12,6 @@ class Auth < Command::Base
 
   private def get_token
     OptionParser.parse do |parser|
-      default_options parser
-
       parser.on("-e", "--email EMAIL", "Email") do |email|
         @email = email
       end
