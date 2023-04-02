@@ -7,7 +7,7 @@ class Auth < Command::Base
 
   def execute
     token = get_token
-    save_token token
+    Config.save_token token
   end
 
   private def get_token
@@ -35,14 +35,5 @@ class Auth < Command::Base
       puts "Error: #{e.message}"
       exit(1)
     end
-  end
-
-  private def save_token(token)
-    # check if dir exists
-    dir = "#{ENV["HOME"]}/.config/polaris"
-    Dir.mkdir(dir) unless Dir.exists?(dir)
-
-    puts "Saving token to ~/.config/polaris/token"
-    File.write(dir + "/token", token)
   end
 end
