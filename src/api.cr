@@ -2,9 +2,10 @@ class MoonApi
   class LoginError < Exception
   end
 
+  @@base_url : String = "http://127.0.0.1:3000"
   def self.login!(email, password)
     res = Crest.post(
-      "http://127.0.0.1:3000/api/signin",
+      @@base_url + "/api/signin",
       {:email => email, :password => password}
     )
     hash = Hash(String, String).from_json(res.body)
@@ -17,5 +18,23 @@ class MoonApi
 
     token = hash["token"]
     return token
+  end
+
+  def self.get_month_calendar(month : String?)
+    url = month ? "/api/calendar?month=#{month}" : "/api/calendar"
+    puts url
+    if res = get_with_auth! url
+      res.body
+    else
+      puts "Error"
+    end
+  end
+
+  def self.get_with_auth!(url)
+    puts Config.token!.inspect
+    Crest.get(@@base_url + url, headers: {
+      "Authorization" => Config.token!,
+      "Accept" => "application/json"
+    })
   end
 end

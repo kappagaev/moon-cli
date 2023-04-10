@@ -22,10 +22,6 @@ OptionParser.parse do |parser|
   with_commands parser, Auth, Calendar
 end
 
-def parse(body : String, date : String)
-  parser = MarkdownParser.new body
-  parser.parse_day("28.03.2023")
-end
 
 # Dir.open(Dir.current + "/calendar").each do |file|
 # next if file == "." || file == ".." || File.directory?(file)
