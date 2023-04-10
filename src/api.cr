@@ -20,18 +20,16 @@ class MoonApi
     return token
   end
 
-  def self.get_month_calendar(month : String?)
+  def self.get_month_calendar!(month : String?) : Array(JSON::Any)
     url = month ? "/api/calendar?month=#{month}" : "/api/calendar"
-    puts url
     if res = get_with_auth! url
-      res.body
+      Array(JSON::Any).from_json(res.body) || raise "Error"
     else
-      puts "Error"
+      raise "Error"
     end
   end
 
   def self.get_with_auth!(url)
-    puts Config.token!.inspect
     Crest.get(@@base_url + url, headers: {
       "Authorization" => Config.token!,
       "Accept" => "application/json"

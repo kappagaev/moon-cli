@@ -43,12 +43,21 @@ class Calendar < Command::Base
   end
 
   def sync_calendar
-    puts MoonApi.get_month_calendar(@month).to_json
-    # MoonApi.get_month_calendar("06.2023").each do |day|
-    # puts day.inspect
-    # end
+    days = MoonApi.get_month_calendar!(@month)
+
+    delete_calendar
+
+    days.each do |day|
+      File.write(@path + "/" + day["title"].to_s + ".md", day["body"].to_s)
+    end
+
   end
 
+  def delete_calendar
+    all_days.each do |day|
+      File.delete(@path + "/" + day)
+    end
+  end
   def parse_calendar
     markdown_ch = Channel(Markdown::Page::Day).new
     context = Channel(Bool).new
@@ -77,6 +86,9 @@ class Calendar < Command::Base
 
   def all_days
     # select reject
-    Dir.open(@path).reject {|f|  f == "." || f == ".." || File.directory? f }
+    # ends_with and end_with
+    Dir.open(@path)
+       .select {|f| f.ends_with? ".md" }
+       .reject {|f|  f == "." || f == ".." || File.directory? f }
   end
 end
