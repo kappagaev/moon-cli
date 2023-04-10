@@ -43,14 +43,28 @@ class Calendar < Command::Base
   end
 
   def sync_calendar
+    puts "Syncing calendar"
+
     days = MoonApi.get_month_calendar!(@month)
 
     delete_calendar
 
-    days.each do |day|
-      File.write(@path + "/" + day["title"].to_s + ".md", day["body"].to_s)
+    progress = Channel(String).new
+
+    spawn do
+      days.each do |day|
+        spawn do
+          title = day["title"].to_s
+          puts "Syncing #{title}"
+          File.write(@path + "/" + title + ".md", day["body"].to_s)
+          progress.send title
+        end
+      end
     end
 
+    days.size.times do
+      puts "Synced #{progress.receive}"
+    end
   end
 
   def delete_calendar
@@ -58,6 +72,7 @@ class Calendar < Command::Base
       File.delete(@path + "/" + day)
     end
   end
+
   def parse_calendar
     markdown_ch = Channel(Markdown::Page::Day).new
     context = Channel(Bool).new
