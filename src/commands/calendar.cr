@@ -1,6 +1,6 @@
-class Calendar < Command::Base
-  @@command = "calendar"
-  @@description = "Authenticate with Polaris"
+class Download < Command::Base
+  @@command = "download"
+  @@description = "Download calendar from Moon Api"
 
   property path : String = "#{ENV["HOME"]}/calendar"
   property sync : Bool = false
@@ -33,21 +33,17 @@ class Calendar < Command::Base
       end
     end
 
-    if @sync
-      sync_calendar
-    else
-      parse_calendar
-    end
+    raise "No path to calendar" unless @path
+
+    download_calendar
 
     puts "Calendar"
   end
 
-  def sync_calendar
+  def download_calendar
     puts "Syncing calendar"
 
     days = MoonApi.get_month_calendar!(@month)
-
-    delete_calendar
 
     progress = Channel(String).new
 
@@ -64,33 +60,6 @@ class Calendar < Command::Base
 
     days.size.times do
       puts "Synced #{progress.receive}"
-    end
-  end
-
-  def delete_calendar
-    all_days.each do |day|
-      File.delete(@path + "/" + day)
-    end
-  end
-
-  def parse_calendar
-    markdown_ch = Channel(Markdown::Page::Day).new
-    context = Channel(Bool).new
-    days = all_days
-
-    spawn do
-      days.each do |day|
-        spawn do
-          date = day.gsub(".md", "")
-          body = File.read("calendar/" + day)
-          markdown_ch.send parse(body, date)
-        end
-      end
-    end
-
-    days.size.times do
-      markdown = markdown_ch.receive
-      puts markdown.inspect
     end
   end
 

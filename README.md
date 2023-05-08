@@ -1,10 +1,19 @@
 # moon-cli
 
-TODO: Write a description here
 
-## Installation
+# TODO
 
-TODO: Write installation instructions here
+- [ ] Save token to ~/.local
+- [ ] List of dates
+  - [ ] Query format
+  - [ ] Get week
+  - [ ] Get month
+
+## Build
+
+```bash
+crystal build src/moon.cr --release --no-debug
+```
 
 ## Usage
 

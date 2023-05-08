@@ -19,7 +19,7 @@ macro with_commands(parser, *commands)
 end
 
 OptionParser.parse do |parser|
-  with_commands parser, Auth, Calendar
+  with_commands parser, Auth, Download, Edit
 end
 
 
