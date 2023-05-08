@@ -2,7 +2,7 @@ require "option_parser"
 
 def default_options(parser)
   parser.on "-v", "--version", "Show version" do
-    puts "version 0.1"
+    puts "version 1"
     exit
   end
 
