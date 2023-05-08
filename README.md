@@ -3,11 +3,11 @@
 
 # TODO
 
-- [ ] Save token to ~/.local
-- [ ] List of dates
-  - [ ] Query format
-  - [ ] Get week
-  - [ ] Get month
+- [X] Save token to ~/.local
+- [X] List of dates
+  - [X] Query format
+  - [X] Get week
+  - [X] Get month
 
 ## Build
 
