@@ -11,8 +11,21 @@ class Edit < Command::Base
       end
     end
 
-    puts "Edit #{@day}"
+    tmp = File.tempfile("moon.md")
 
+    File.write tmp.path, MoonApi.get_day!(@day.to_s("%d.%m.%Y"))["body"].to_s
+
+    system "$EDITOR #{tmp.path}"
+
+    content = tmp.gets_to_end
+    parser = MarkdownParser.new content
+    puts parser.to_s(true)
+
+    puts "Saving..."
+    MoonApi.save_day!(@day.to_s("%d.%m.%Y"), content)
+    puts "Saved!"
+
+    tmp.close
   end
 
   private def parse_day(day)

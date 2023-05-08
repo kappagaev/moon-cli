@@ -26,13 +26,13 @@ class Auth < Command::Base
       exit(1)
     end
 
-    puts "Authenticating..."
+    puts "Authenticating...\n".colorize(:light_blue)
     begin
       token = MoonApi.login! email, password
-      puts "Authentication successful"
+      puts "Authentication successful\n".colorize(:green)
       token
     rescue e
-      puts "Error: #{e.message}"
+      puts "Error: #{e.message}".colorize(:red)
       exit(1)
     end
   end

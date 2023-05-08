@@ -1,22 +1,26 @@
 class Config
-  def self.save_token(token)
-    # check if dir exists
-    dir = "#{ENV["HOME"]}/.config/polaris"
-    Dir.mkdir(dir) unless Dir.exists?(dir)
+  # state directory
+  @@state = "#{ENV["HOME"]}/.local/state/polaris"
 
-    puts "Saving token to ~/.config/polaris/token"
-    File.write(dir + "/token", token)
+  def self.save_token(token)
+    state = @@state
+
+    Dir.mkdir(state) unless Dir.exists?(state)
+
+    puts "Saving token to #{state}/token".colorize(:yellow)
+
+    File.write(state + "/token", token)
   end
 
   def self.logged?
-    File.exists?("#{ENV["HOME"]}/.config/polaris/token")
+    File.exists?(@@state + "/token")
   end
 
   def self.token!
-    File.read("#{ENV["HOME"]}/.config/polaris/token")
+    File.read(@@state + "/token")
   end
 
   def self.logout
-    File.delete("#{ENV["HOME"]}/.config/polaris/token")
+    File.delete(@@state + "/token")
   end
 end

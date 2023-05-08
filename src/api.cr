@@ -29,8 +29,32 @@ class MoonApi
     end
   end
 
+  def self.get_day!(day : String) : JSON::Any
+    if res = get_with_auth! "/day/#{day}.json"
+      JSON::Any.from_json(res.body) || raise "Error"
+    else
+      raise "Error"
+    end
+  end
+
+  def self.save_day!(day : String, content : String)
+    if res = post_with_auth! "/api/day/#{day}", {:body => content}
+      json = JSON::Any.from_json(res.body) || raise "Error"
+      raise "Error" if json["success"] == false
+    else
+      raise "Error"
+    end
+  end
+
   def self.get_with_auth!(url)
     Crest.get(@@base_url + url, headers: {
+      "Authorization" => Config.token!,
+      "Accept" => "application/json"
+    })
+  end
+
+  def self.post_with_auth!(url, body)
+    Crest.post(@@base_url + url, body, headers: {
       "Authorization" => Config.token!,
       "Accept" => "application/json"
     })

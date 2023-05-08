@@ -3,7 +3,6 @@ class Download < Command::Base
   @@description = "Download calendar from Moon Api"
 
   property path : String = "#{ENV["HOME"]}/calendar"
-  property sync : Bool = false
 
   # @TODO
   # property date : String = Time.utc.strftime("%M.%Y")
@@ -15,22 +14,6 @@ class Download < Command::Base
       parser.on("-p", "--path-to-calendar path", "path") do |path|
         @path = path
       end
-
-      parser.on("-s", "--sync", "sync") do
-        @sync = true
-      end
-
-      parser.on("-m", "--month month", "month") do |month|
-        if month =~ /\d{2}/
-          month = "#{month}.#{Time.utc.year}}"
-        elsif month =~ /\d{2}\.\d{4}/
-          month = "#{month}"
-        else
-          raise "Invalid month format, use MM.YYYY or MM"
-        end
-
-        @month = month
-      end
     end
 
     raise "No path to calendar" unless @path
@@ -41,7 +24,7 @@ class Download < Command::Base
   end
 
   def download_calendar
-    puts "Syncing calendar"
+    puts "Downloading calendar for #{@month}\n".colorize(:green)
 
     days = MoonApi.get_month_calendar!(@month)
 
@@ -51,7 +34,7 @@ class Download < Command::Base
       days.each do |day|
         spawn do
           title = day["title"].to_s
-          puts "Syncing #{title}"
+          puts "Downloading #{title}".colorize(:light_green)
           File.write(@path + "/" + title + ".md", day["body"].to_s)
           progress.send title
         end
@@ -59,7 +42,7 @@ class Download < Command::Base
     end
 
     days.size.times do
-      puts "Synced #{progress.receive}"
+      puts "Downloaded #{progress.receive}".colorize(:light_yellow)
     end
   end
 

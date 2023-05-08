@@ -1,4 +1,6 @@
 require "./config"
+require "colorize"
+require "./utils"
 require "./api"
 require "./command"
 require "./commands/*"
